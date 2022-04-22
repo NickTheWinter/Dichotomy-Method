@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Math;
 
 namespace Dichotomy_Method
 {
@@ -8,18 +9,20 @@ namespace Dichotomy_Method
     {
         //Функция 
         static double fx(double x) => Math.Cos(2 * x) - 3 * Math.Pow(x, 2) + 1;
+        //static double fx(double x) => Pow(x, 3) + 4 * Pow(x, 2) - 1;
         //Производная функции
         static double f1x(double x) => -2 * Math.Sin(2 * x) - 6 * x;
+        //static double f1x(double x) => 3 * Pow(x, 2) + 8 * x;
         static void Main(string[] args)
         {
             //Задается интервал и шаг, точность
             double a = -10, b = 10, h = 1, k = 0.001;
-
+            double j;
             double c, funcC, funcB;
             double[] equation = new double[Convert.ToInt32((b - a) / h) + 1];
             Dictionary<double, double> DerEquation = new Dictionary<double, double>();
             int counter = 0;
-
+            
             List<double> suspicious = new List<double>();
 
             for (double i = a; i <= b; i += h)
@@ -40,33 +43,58 @@ namespace Dichotomy_Method
 
                 counter++;
             }
-            int counterPairs = suspicious.Count / 2;
-            double jr;
+            Console.Write("Подозрительные на отрезки озоляции: ");
             for (int i = 0; i < suspicious.Count; i += 2)
             {
+                Console.Write("[{0,2};{1,2}] ", suspicious[i], suspicious[i + 1]);
+            }
+            Console.WriteLine();
+            int counterPairs = suspicious.Count / 2;
+            int iteration = 0;
+            List<double> lastOfInterval = new List<double>();
+            List<double> firstOfInterval = new List<double>();
+            //int[,] iterationCount = new int[counterPairs,];
+            double jr = 0;
+            for (int i = 0; i < suspicious.Count; i += 2)
+            {
+
+                iteration = 0;
                 int number = 0;
                 try
                 {
-                    for (double j = suspicious[i]; j < suspicious[i + 1]; j += h / 10)
+                    for (j = suspicious[i]; j <= suspicious[i + 1]; j += h / 10)
                     {
+
+                        j = Round(j, 4);
                         jr = Math.Round(j, (h / 10).ToString().Count() - 1);
                         //Производная функции
                         double tmp = f1x(j);
-                        
+
                         //double tmp = 3 * Math.Pow(j, 2) + 1;
                         DerEquation.Add(jr, Math.Round(tmp, 13));
+                        if (iteration == 0)
+                        {
+                            ;
+                            firstOfInterval.Add(jr);
+                        }
+                        iteration++;
                         try
                         {
                             if (DerEquation[jr] == 0 && jr == 0)
+                            {
                                 DerEquation.Remove(jr);
+                                iteration--;
+                                firstOfInterval.Remove(jr);
+                            }
+
                             if (((DerEquation[jr] > 0 && DerEquation[jr - h / 10] > 0) || (DerEquation[jr] < 0 && DerEquation[jr - h / 10] < 0)))
                             {
-                                if(number != 1)
+                                if (number != 1)
                                 {
                                     Console.WriteLine("[{0,2};{1,2}] - отрезок изоляции", suspicious[i], suspicious[i + 1]);
                                     number = 1;
                                 }
-                                
+
                             }
                             else
                             {
@@ -85,20 +113,22 @@ namespace Dichotomy_Method
                 }
                 catch (ArgumentOutOfRangeException) { }
 
+                lastOfInterval.Add(DerEquation.Last().Key);
+
+
             }
+
             double length;
             for (int i = 0; i < suspicious.Count; i += 2)
             {
-                a = DerEquation.ElementAt(Convert.ToInt32(i + (DerEquation.Count / counterPairs / 2.5) * i)).Key;
-                b = DerEquation.ElementAt((DerEquation.Count / counterPairs - 1) + (i * DerEquation.Count / counterPairs) / 2).Key;
+                a = firstOfInterval[i / 2];
+                b = lastOfInterval[i / 2];
                 do
                 {
                     c = (a + b) / 2;
                     //Подставляем исходную формулу для вычисления функций
                     funcC = fx(c);
                     funcB = fx(b);
-                    //funcC = Math.Pow(c, 3) + c - 1;
-                    //funcB = Math.Pow(b, 3) + b - 1; 
 
                     length = b - a;
                     if (funcB * funcC < 0)

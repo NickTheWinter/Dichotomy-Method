@@ -6,6 +6,10 @@ namespace Dichotomy_Method
 {
     internal class Program
     {
+        //Функция 
+        static double fx(double x) => Math.Cos(2 * x) - 3 * Math.Pow(x, 2) + 1;
+        //Производная функции
+        static double f1x(double x) => -2 * Math.Sin(2 * x) - 6 * x;
         static void Main(string[] args)
         {
             //Задается интервал и шаг, точность
@@ -21,7 +25,7 @@ namespace Dichotomy_Method
             for (double i = a; i <= b; i += h)
             {
                 //исходное уравнение 
-                double tmp = Math.Cos(2 * i) - 3 * Math.Pow(i, 2) + 1;
+                double tmp = fx(i);
                 //double tmp = Math.Pow(i, 3) + i - 1;
                 equation[counter] = tmp;
                 try
@@ -46,7 +50,7 @@ namespace Dichotomy_Method
                     {
                         jr = Math.Round(j, (h / 10).ToString().Count() - 1);
                         //Производная функции
-                        double tmp = -2 * Math.Sin(2 * j) - 6 * j;
+                        double tmp = f1x(j);
                         //double tmp = 3 * Math.Pow(j, 2) + 1;
                         DerEquation.Add(jr, Math.Round(tmp, 13));
                         try
@@ -85,8 +89,8 @@ namespace Dichotomy_Method
                 {
                     c = (a + b) / 2;
                     //Подставляем исходную формулу для вычисления функций
-                    funcC = Math.Cos(2 * c) - 3 * Math.Pow(c, 2) + 1;
-                    funcB = Math.Cos(2 * b) - 3 * Math.Pow(b, 2) + 1;
+                    funcC = fx(c);
+                    funcB = fx(b);
                     //funcC = Math.Pow(c, 3) + c - 1;
                     //funcB = Math.Pow(b, 3) + b - 1; 
 

@@ -44,6 +44,7 @@ namespace Dichotomy_Method
             double jr;
             for (int i = 0; i < suspicious.Count; i += 2)
             {
+                int number = 0;
                 try
                 {
                     for (double j = suspicious[i]; j < suspicious[i + 1]; j += h / 10)
@@ -51,21 +52,27 @@ namespace Dichotomy_Method
                         jr = Math.Round(j, (h / 10).ToString().Count() - 1);
                         //Производная функции
                         double tmp = f1x(j);
+                        
                         //double tmp = 3 * Math.Pow(j, 2) + 1;
                         DerEquation.Add(jr, Math.Round(tmp, 13));
                         try
                         {
                             if (DerEquation[jr] == 0 && jr == 0)
                                 DerEquation.Remove(jr);
-                            if ((DerEquation[jr] > 0 && DerEquation[jr + 1] > 0) || (DerEquation[jr] < 0 && DerEquation[jr + 1] < 0))
+                            if (((DerEquation[jr] > 0 && DerEquation[jr - h / 10] > 0) || (DerEquation[jr] < 0 && DerEquation[jr - h / 10] < 0)))
                             {
-
+                                if(number != 1)
+                                {
+                                    Console.WriteLine("[{0,2};{1,2}] - отрезок изоляции", suspicious[i], suspicious[i + 1]);
+                                    number = 1;
+                                }
+                                
                             }
                             else
                             {
+                                Console.WriteLine("Знак производной не сохраняется на отрезке [{0,2};{1,2}]. ", suspicious[i], suspicious[i + 1]);
                                 suspicious.RemoveAt(i);
                                 suspicious.RemoveAt(i);
-                                Console.WriteLine($"Знак производной не сохраняется на отрезке [{i};{i + 1}]. ");
                             }
 
 
@@ -77,7 +84,6 @@ namespace Dichotomy_Method
 
                 }
                 catch (ArgumentOutOfRangeException) { }
-
 
             }
             double length;

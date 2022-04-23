@@ -49,8 +49,7 @@ namespace Dichotomy_Method
                 Console.Write("[{0,2};{1,2}] ", suspicious[i], suspicious[i + 1]);
             }
             Console.WriteLine();
-            int counterPairs = suspicious.Count / 2;
-            int iteration = 0;
+            int iteration;
             List<double> lastOfInterval = new List<double>();
             List<double> firstOfInterval = new List<double>();
             double jr = 0;

@@ -22,14 +22,14 @@ namespace Dichotomy_Method
             double[] equation = new double[Convert.ToInt32((b - a) / h) + 1];
             Dictionary<double, double> DerEquation = new Dictionary<double, double>();
             int counter = 0;
-            
+
             List<double> suspicious = new List<double>();
 
+            //Поиск подозрительных отрезков изоляции
             for (double i = a; i <= b; i += h)
             {
                 //исходное уравнение 
                 double tmp = fx(i);
-                //double tmp = Math.Pow(i, 3) + i - 1;
                 equation[counter] = tmp;
                 try
                 {
@@ -53,8 +53,9 @@ namespace Dichotomy_Method
             int iteration = 0;
             List<double> lastOfInterval = new List<double>();
             List<double> firstOfInterval = new List<double>();
-            //int[,] iterationCount = new int[counterPairs,];
             double jr = 0;
+
+            //Определяются отрезки изоляции
             for (int i = 0; i < suspicious.Count; i += 2)
             {
 
@@ -67,10 +68,9 @@ namespace Dichotomy_Method
 
                         j = Round(j, 4);
                         jr = Math.Round(j, (h / 10).ToString().Count() - 1);
-                        //Производная функции
+
                         double tmp = f1x(j);
 
-                        //double tmp = 3 * Math.Pow(j, 2) + 1;
                         DerEquation.Add(jr, Math.Round(tmp, 13));
                         if (iteration == 0)
                         {
@@ -103,7 +103,6 @@ namespace Dichotomy_Method
                                 suspicious.RemoveAt(i);
                             }
 
-
                         }
                         catch (KeyNotFoundException) { }
                         catch (ArgumentOutOfRangeException) { }
@@ -119,6 +118,7 @@ namespace Dichotomy_Method
             }
 
             double length;
+            //Метод дихотомии
             for (int i = 0; i < suspicious.Count; i += 2)
             {
                 a = firstOfInterval[i / 2];
@@ -129,8 +129,8 @@ namespace Dichotomy_Method
                     //Подставляем исходную формулу для вычисления функций
                     funcC = fx(c);
                     funcB = fx(b);
-
                     length = b - a;
+
                     if (funcB * funcC < 0)
                         a = c;
                     else
